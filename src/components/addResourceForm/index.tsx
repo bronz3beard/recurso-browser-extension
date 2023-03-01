@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { ActionMeta, SingleValue } from 'react-select'
 import { Topic, Resource } from '../../types'
 import { supabase } from '../../lib/supabaseClient'
@@ -32,7 +32,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
   const [topicName, setTopicName] = useState<SingleValue<OptionType>>()
   const [isNewTopic, setIsNewTopic] = useState<boolean>(false)
 
-  const { errors, formData, handleChange, handleSubmit } = useForm({
+  const { errors, formData, handleChange, handleSubmit, setFormData } = useForm({
     initialValues: {
       linkUrl: {
         value: '',
@@ -72,7 +72,6 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
               setTopic(data[0])
             } else {
               if (user && topicName) {
-                console.log("🚀 ~ file: index.tsx:84 ~ onSubmit ~ topicName:", topicName)
                 setTopic({
                   id: topicName.value,
                   user_id: user.id,
@@ -136,13 +135,35 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
     },
   })
 
+
+  const { linkUrl, description } = formData
+  const validationErrors: FormErrorTemplate = errors as FormErrorTemplate
+
+  useEffect(() => {
+    const getCurrentTab = async () => {
+      chrome.tabs.query({ currentWindow: true, active: true }, async function(tabs){      
+        setFormData({
+          ...formData,
+          linkUrl: {
+            ...formData.linkUrl,
+            value: tabs[0].url ?? '',
+          },
+          description: {
+            ...formData.description,
+            value: tabs[0].title ?? ''
+          }
+        })
+      });
+    }
+
+    getCurrentTab()
+  }, [])
+
   const addNewResource = async (
     payload: Partial<Resource>,
   ): Promise<Partial<Resource> | undefined> => {
-    console.log("🚀 ~ file: index.tsx:76 ~ useFetchMethods ~ payload:", payload)
     try {
       const { data, error } = await supabase.from('resource').insert({ ...payload })
-      console.log("🚀 ~ file: index.tsx:47 ~ useFetchMethods ~ data:", data)
 
       if (error) {
         console.error(
@@ -158,7 +179,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
       )
 
       if (data) {
-        console.log("🚀 ~ file: index.tsx:96 ~ useFetchMethods ~ data:", data)
+        console.log("🚀 ~ file: index.tsx:190 ~ data:", data)
         return data[0]
       }
     } catch (error: any) {
@@ -167,6 +188,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
         error,
       )
     }
+
   }
 
   const handleTopicAsyncSelectChange = (
@@ -180,122 +202,111 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
     setTopicName(newValue)
   }
 
-
-  const { linkUrl, description } = formData
-  const validationErrors: FormErrorTemplate = errors as FormErrorTemplate
-
   return (
-    <div className="flex flex-wrap w-full justify-center items-start space-y-4 mt-10">
-      <div className="fixed w-full h-full top-1/2 transform -translate-y-1/2 overflow-hidden p-4 bg-theme-grey lg:space-y-5 space-y-6 pb-7 rounded-lg shadow-2xl">
-        <div className="mx-auto p-4 bg-theme-grey lg:space-y-5 space-y-6 pb-7">
-          <div className="w-full my-2">
-            <h1 className="font-light text-white text-center">Recurso</h1>
-          </div>
-          {formSection === FormSection.TOPIC && (
-            <div className="relative max-w-sm mx-auto">
-              <label
-                htmlFor="topic"
-                className="z-0 duration-300 origin-0 text-white text-base"
-              >
-                Enter a topic*
-              </label>
-              <AsyncReactSelect
-                {...{
-                  user,
-                  filterValue: topicName,
-                  selectType: SelectType.TOPIC, 
-                  handleAsyncSelectChange: handleTopicAsyncSelectChange,
-                  className: "block w-full text-base text-black appearance-none focus:outline-none shadow-sm border-gray-300 rounded-md font-bold"
-                }}
-              />
-            </div>
-          )}
-          {formSection === FormSection.RESOURCE && (
-            <>
-              <div className="relative max-w-sm mx-auto">
-                <Input
-                  required
-                  autoFocus
-                  type="url"
-                  id="linkUrl"
-                  placeholder=""
-                  name="linkUrl"
-                  pattern="https://*"
-                  inputMode="text"
-                  value={linkUrl.value}
-                  onChange={handleChange}
-                  className="block w-full p-2 px-2 shadow-sm rounded-md text-black font-bold text-base appearance-none focus:outline-none"
-                />
-                <label
-                  htmlFor="linkUrl"
-                  className="absolute left-2 lg:top-2 top-3 z-0 duration-300 origin-0 text-black text-base"
-                >
-                  {linkUrl.label}*
-                </label>
-              </div>
-              <div className="relative max-w-sm mx-auto">
-                <Input
-                  autoFocus
-                  type="text"
-                  placeholder=""
-                  id="description"
-                  name="description"
-                  inputMode="text"
-                  onChange={handleChange}
-                  value={description.value}
-                  className="block w-full p-2 shadow-sm rounded-md text-black font-bold text-base appearance-none focus:outline-none"
-                />
-                <label
-                  htmlFor="description"
-                  className="absolute left-2 lg:top-2 top-3 z-0 duration-300 origin-0 text-black text-base"
-                >
-                  {description.label}
-                </label>
-              </div>
-            </>
-          )}
-          <div className="flex flex-wrap max-w-sm mx-auto items-center justify-around mt-4 lg:space-y-0 md:space-y-2 space-y-2">
-            {formSection === FormSection.TOPIC ? (
-              <PrimaryButton
-                type="submit"
-                width="w-36"
-                height="h-8"
-                id="signUp"
-                buttonPadding="p-1"
-                textColour="text-white"
-                onClick={handleSubmit}
-                buttonClass="flex flex-row items-center bg-secondary-colour hover:bg-secondary-contrast-colour active:bg-secondary-contrast-colour text-white font-medium rounded-lg"
-              >
-                Add Topic
-              </PrimaryButton>
-            ) : (
-              <PrimaryButton
-                type="submit"
-                width="w-36"
-                height="h-8"
-                id="signIn"
-                buttonPadding="p-1"
-                textColour="text-white"
-                onClick={handleSubmit}
-                buttonClass="flex flex-row items-center bg-secondary-colour hover:bg-secondary-contrast-colour active:bg-secondary-contrast-colour text-white font-medium rounded-lg"
-              >
-                Add to Stash
-              </PrimaryButton>
-            )}
-          </div>
-          <div className="flex flex-col">
-            {formSection === FormSection.TOPIC && (
-              <p className="text-white text-lg text-center">
-                {validationErrors.topic}
-              </p>
-            )}
-            <p className="text-white text-lg text-center">
-              {validationErrors.linkUrl}
-            </p>
-          </div>
+    <>
+      {formSection === FormSection.TOPIC && (
+        <div className="relative max-w-sm mx-auto">
+          <label
+            htmlFor="topic"
+            className="z-0 duration-300 origin-0 text-white text-lg select-none"
+          >
+            Enter a topic*
+          </label>
+          <AsyncReactSelect
+            {...{
+              user,
+              filterValue: topicName,
+              selectType: SelectType.TOPIC, 
+              handleAsyncSelectChange: handleTopicAsyncSelectChange,
+              className: "block w-full text-base text-black appearance-none focus:outline-none border-gray-300 rounded-md font-bold"
+            }}
+          />
         </div>
+      )}
+      {formSection === FormSection.RESOURCE && (
+        <>
+          <div className="relative max-w-sm mx-auto">
+            <Input
+              required
+              autoFocus
+              type="url"
+              id="linkUrl"
+              placeholder=""
+              name="linkUrl"
+              pattern="https://*"
+              inputMode="text"
+              value={linkUrl.value}
+              onChange={handleChange}
+              className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
+            />
+            <label
+              htmlFor="linkUrl"
+              className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
+            >
+              {linkUrl.label}*
+            </label>
+          </div>
+          <div className="relative max-w-sm mx-auto">
+            <Input
+              autoFocus
+              type="text"
+              placeholder=""
+              id="description"
+              name="description"
+              inputMode="text"
+              onChange={handleChange}
+              value={description.value}
+              className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
+            />
+            <label
+              htmlFor="description"
+              className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
+            >
+              {description.label}
+            </label>
+          </div>
+        </>
+      )}
+      <div className="flex flex-wrap max-w-sm m-auto items-center justify-around py-4">
+        {formSection === FormSection.TOPIC ? (
+          <PrimaryButton
+            type="submit"
+            width="w-36"
+            height="h-16"
+            id="topic"
+            text="Add Topic"
+            buttonPadding="p-1"
+            textColour="text-white"
+            onClick={handleSubmit}
+            buttonClass="flex flex-row items-center text-white font-medium rounded-lg"
+            backgroundColor="bg-secondary-colour hover:bg-secondary-contrast-colour active:bg-secondary-contrast-colour"
+          />
+        ) : (
+          <PrimaryButton
+            type="submit"
+            width="w-36"
+            height="h-16"
+            id="save"
+            text="Add to Stash"
+            buttonPadding="p-1"
+            textColour="text-white"
+            onClick={handleSubmit}
+            buttonClass="flex flex-row items-center text-white font-medium rounded-lg"
+            backgroundColor="bg-secondary-colour hover:bg-secondary-contrast-colour active:bg-secondary-contrast-colour"
+          />
+        )}
       </div>
-    </div>
+      <div className="flex flex-col">
+        {formSection === FormSection.TOPIC && (
+          <p className="text-white text-lg text-center">
+            {validationErrors.topic}
+          </p>
+        )}
+        <p className="text-white text-lg text-center">
+          {validationErrors.linkUrl}
+        </p>
+      </div>
+    </>
   )
 }
 

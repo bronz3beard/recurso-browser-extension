@@ -95,7 +95,7 @@ PrimaryButton.defaultProps = {
   backgroundColor:
     'bg-contrast-colour hover:bg-secondary-contrast-colour active:bg-secondary-contrast-colour',
   childContainerClass:
-    'w-full items-center static text-center not-italic tracking-tight font-base text-xs lg:text-base px-2',
+    'w-full items-center static text-center not-italic tracking-tight font-base text-base px-2',
   buttonClass:
     'flex flex-row items-center border-opacity-10 text-white font-medium',
   onClick: () => {

@@ -28,7 +28,6 @@ type LogInSignUpProps = {
 
 const LogInSignUp:FC<LogInSignUpProps> = ({ setUser }: LogInSignUpProps) => {
   const [loading, setLoading] = useState(false)
-  console.log("🚀 ~ file: index.tsx:33 ~ loading:", loading)
 
   const {
     errors,
@@ -121,87 +120,80 @@ const LogInSignUp:FC<LogInSignUpProps> = ({ setUser }: LogInSignUpProps) => {
 
 
   return (
-    <div className="">
-      <div className="flex flex-wrap w-full justify-center items-start space-y-4 mt-10">
-        <div className="fixed w-full h-full top-1/2 transform -translate-y-1/2 overflow-hidden p-4 bg-theme-grey lg:space-y-5 space-y-6 pb-7 rounded-lg shadow-2xl">
-          <div className="mx-auto overflow-hidden p-4 bg-theme-grey lg:space-y-5 space-y-6 pb-7">
-          <div className="w-full my-2">
-            <h1 className="font-light text-white text-center">Recurso</h1>
-          </div>
-            <div className="relative max-w-sm mx-auto">
-              <Input
-                required
-                id="email"
-                type="email"
-                name="email"
-                placeholder=""
-                inputMode="text"
-                value={email.value}
-                onChange={handleChange}
-                className="block w-full p-2 px-2 shadow-sm border-gray-300 rounded-md text-black font-bold text-base appearance-none focus:outline-none"
-              />
-              <label
-                htmlFor="email"
-                className="absolute left-2 lg:top-2 top-3 z-0 duration-300 origin-0 text-black text-base"
-              >
-                Email*
-              </label>
-            </div>
-            <div className="relative h-10 max-w-sm mx-auto">
-              <Input
-                id="password"
-                placeholder=""
-                type="password"
-                name="password"
-                inputMode="text"
-                onChange={handleChange}
-                value={password.value}
-                autoComplete="password"
-                className="block w-full p-2 px-2 shadow-sm border-gray-300 rounded-md text-black font-bold text-base appearance-none focus:outline-none"
-              />
-              <label
-                htmlFor="password"
-                className="absolute left-2 lg:top-2 top-3 z-0 duration-300 origin-0 text-black text-base"
-              >
-                Password*
-              </label>
-            </div>
-            <div className="flex flex-wrap max-w-sm m-auto items-center justify-around">
-              <PrimaryButton
-                type="submit"
-                width="w-36"
-                height="h-8"
-                id="signUp"
-                text="Create Account"
-                buttonPadding="p-1"
-                textColour="text-white"
-                onClick={handleSignUp}
-                buttonClass="flex flex-row items-center bg-secondary-colour hover:bg-contrast-colour active:bg-gray-300 text-white font-medium rounded-lg"
-              />
-              <PrimaryButton
-                type="submit"
-                width="w-36"
-                height="h-8"
-                id="signIn"
-                text='Sign In'
-                buttonPadding="p-1"
-                textColour="text-white"
-                onClick={handleSignIn}
-                buttonClass="flex flex-row items-center bg-secondary-colour hover:bg-contrast-colour active:bg-gray-300 text-white font-medium rounded-lg"
-              />
-            </div>
-            <div className="flex flex-col">
-              <p className="text-white text-lg text-center">
-                {validationErrors.email}
-              </p>
-              <p className="text-white text-lg text-center">
-                {validationErrors.password}
-              </p>
-            </div>
-          </div>
-        </div>
+    <>
+      <div className="relative max-w-sm mx-auto">
+        <Input
+          required
+          id="email"
+          type="email"
+          name="email"
+          placeholder=""
+          inputMode="text"
+          value={email.value}
+          onChange={handleChange}
+          className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
+        />
+        <label
+          htmlFor="email"
+          className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
+        >
+          Email*
+        </label>
       </div>
-    </div>
+      <div className="relative h-10 max-w-sm mx-auto">
+        <Input
+          id="password"
+          placeholder=""
+          type="password"
+          name="password"
+          inputMode="text"
+          onChange={handleChange}
+          value={password.value}
+          autoComplete="password"
+          className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
+        />
+        <label
+          htmlFor="password"
+          className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
+        >
+          Password*
+        </label>
+      </div>
+      <div className="flex flex-wrap max-w-sm m-auto items-center justify-around py-4">
+        <PrimaryButton
+          type="submit"
+          width="w-36"
+          height="h-16"
+          id="signUp"
+          text="Create Account"
+          buttonPadding="p-1"
+          textColour="text-white"
+          onClick={handleSignUp}
+          buttonClass="flex flex-row items-center text-white font-medium rounded-lg"
+          backgroundColor="bg-secondary-colour hover:bg-secondary-contrast-colour active:bg-secondary-contrast-colour"
+        />
+        <PrimaryButton
+          type="submit"
+          width="w-36"
+          height="h-16"
+          id="signIn"
+          text='Sign In'
+          buttonPadding="p-1"
+          textColour="text-white"
+          onClick={handleSignIn}
+          buttonClass="flex flex-row items-center text-white font-medium rounded-lg"
+          backgroundColor="bg-secondary-colour hover:bg-secondary-contrast-colour active:bg-secondary-contrast-colour"
+        />
+      </div>
+      <div className="flex flex-col">
+        <p className="text-white text-lg text-center">
+          {validationErrors.email}
+        </p>
+        <p className="text-white text-lg text-center">
+          {validationErrors.password}
+        </p>
+      </div>
+    </>
   )
 }
 

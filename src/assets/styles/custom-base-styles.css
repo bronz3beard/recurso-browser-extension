@@ -9,7 +9,7 @@
 body {
   margin: 0;
   width: 500px;
-  height: 400px;
+  height: 450px;
   position: relative;
   background: none;
 	font-size: 1.4rem;
@@ -144,21 +144,4 @@ input {
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
-}
-
-input:focus:not(:focus:visible) {
-  outline: none !important;
-}
-
-input:focus-within ~ label {
-  @apply transform scale-75 -translate-y-6 text-white left-0 lg:text-lg text-base -top-0.5;
-}
-
-input:focus-within ~ label,
-input:not(:placeholder-shown) ~ label {
-  @apply transform scale-75 -translate-y-6 absolute left-0 top-0 z-0 lg:text-lg text-white font-bold text-base m-0 p-0 ;
-}
-
-input:focus-within ~ label {
-  @apply text-white;
 }

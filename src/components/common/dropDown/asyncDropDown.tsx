@@ -169,40 +169,18 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
         IndicatorSeparator: () => null,
         LoadingIndicator: () => null,
       }}
-      styles={{
-        control: cursorPointerStyles,
-      }}
       placeholder={placeHolder?.label}
-      // styles={{
-      //   menuList: () => ({
-      //     zIndex: 9999,
-      //     height: `${20}rem`,
-      //     overflowY: 'scroll',
-      //   }),
-      //   container: (provided, state) => ({
-      //     ...provided,
-      //     padding: 0,
-      //     marging: 0,
-      //     width: `${99.5}%`,
-      //   }),
-      //   control: (provided, state) => ({
-      //     ...provided,
-      //     boxShadow: 'none',
-      //     border: 'none',
-      //     borderRadius: 0,
-      //   }),
-      //   menu: (provided, state) => ({
-      //     ...provided,
-      //     border: 'none',
-      //     boxShadow: 'none',
-      //   }),
-      //   option: (provided, state) => ({
-      //     ...provided,
-      //     backgroundColor: '#60A5FA',
-      //     cursor: 'pointer',
-      //     color: state.isFocused ? 'red' : '#fefefe',
-      //   }),
-      // }}
+      styles={{
+        control: (provided, state) => ({
+          ...provided,
+          boxShadow: 'none',
+          border: 'none',
+          // borderRadius: 0,
+          padding: '0.8rem',
+          borderRadius: '10px',
+          cursor: 'pointer',
+        })
+      }}
     />
   )
 }

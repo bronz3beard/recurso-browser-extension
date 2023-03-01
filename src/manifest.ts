@@ -6,6 +6,10 @@ const manifest: Manifest.WebExtensionManifest = {
   name: pkg.displayName,
   version: pkg.version,
   description: pkg.description,
+  permissions: [
+    "tabs",
+    "activeTab"
+  ],
   options_ui: {
     page: 'src/pages/options/index.html',
   },
@@ -18,7 +22,7 @@ const manifest: Manifest.WebExtensionManifest = {
     default_icon: 'icon-34.png',
   },
   chrome_url_overrides: {
-    newtab: 'src/pages/newtab/index.html',
+    // newtab: 'src/pages/newtab/index.html',
   },
   icons: {
     '128': 'icon-128.png',

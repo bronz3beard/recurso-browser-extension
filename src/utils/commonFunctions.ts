@@ -1,7 +1,3 @@
-/* eslint-disable no-useless-escape */
-import { MouseEvent, RefObject } from 'react'
-import { assertIsTrue } from './valueCheckers'
-
 export const getDescendantPropObject = (
   obj: any,
   description: string,
@@ -66,4 +62,3 @@ export const reactSelectOptions = (
     (value: { [x: string]: any }, index: any, self: any[]) =>
       self.map(item => item[objectKey]).indexOf(value[objectKey]) === index,
   )
-  
