@@ -14,7 +14,6 @@ import {
 import { assertIsTrue } from '../../../utils/valueCheckers'
 import { OptionType } from '.'
 import { User } from '@supabase/supabase-js'
-import { cursorPointerStyles } from './helpers'
 
 export enum SelectType {
   TOPIC,
