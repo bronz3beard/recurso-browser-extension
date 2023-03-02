@@ -33,3 +33,35 @@
 .flip-back {
   transform: rotateY(180deg);
 }
+
+/* QR code_perspective_matte */
+.qr_code_perspective_matte {
+  position: absolute;
+  width: 1500px;
+  height: 1500px;
+  left: 750px;
+  top: 750px;
+}
+
+/* shadow */
+.qr_code_perspective_matte shadow {
+  position: absolute;
+  width: 1228.5px;
+  height: 192px;
+  left: 216px;
+  top: 1196px;
+
+  background: linear-gradient(92.51deg, #C4C4C4 42.28%, rgba(196, 196, 196, 0.32) 91.45%, rgba(196, 196, 196, 0) 98.84%);
+  filter: blur(12.5px);
+}
+
+/* img */
+.qr_code_perspective_matte img {
+  position: absolute;
+  width: 1500px;
+  height: 1500px;
+  left: 0px;
+  top: 0px;
+
+  background: url(qr_code.png);
+}

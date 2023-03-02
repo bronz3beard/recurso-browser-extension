@@ -47,6 +47,7 @@ type InputProps = Readonly<{
     | 'decimal'
     | undefined
   autoFocus?: boolean
+  tabIndex?: number
 }>
 
 type InputEventProps = {

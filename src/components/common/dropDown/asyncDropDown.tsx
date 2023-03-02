@@ -21,6 +21,7 @@ export enum SelectType {
 }
 
 type AsyncReactSelectProps = {
+  tabIndex: number
   user: User | undefined
   selectType: SelectType
   className?: string
@@ -33,10 +34,11 @@ type AsyncReactSelectProps = {
 
 const AsyncReactSelect: FC<AsyncReactSelectProps> = ({ 
     user,
+    tabIndex,
     filterValue,
     selectType, 
     handleAsyncSelectChange,
-    className = 'block w-full text-base text-black appearance-none focus:outline-none',
+    className = 'block w-full text-lg text-white appearance-none focus:outline-none',
   }: AsyncReactSelectProps,
 ) => {
   const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout>()
@@ -56,7 +58,7 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
         setPlaceHolder({
           value: 0,
           label: !filterValue?.label
-            ? 'Search or Select Topic'
+            ? 'Search Topic'
             : filterValue.label,
         })
       }
@@ -154,6 +156,8 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
 
   return (
     <AsyncCreatableSelect<OptionType>
+      tabIndex={tabIndex}
+      autoFocus
       cacheOptions
       defaultOptions
       id="async-select"
@@ -172,12 +176,37 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
       styles={{
         control: (provided, state) => ({
           ...provided,
-          boxShadow: 'none',
+          color: '#fefefe',
+          borderRadius: 0,
+          padding: '0.5rem',
+          boxShadow: "none",
           border: 'none',
-          // borderRadius: 0,
-          padding: '0.8rem',
-          borderRadius: '10px',
+          borderBottom: state.isFocused ? 'solid 2px #fb5607' : 'solid 2px #d1d5db',
+          borderTopLeftRadius: '10px',
+          borderTopRightRadius: '10px',
           cursor: 'pointer',
+          backgroundColor: '#374151',
+          "&:hover": {
+            borderBottom: 'solid 2px #fb5607',
+          },
+          // "&:acitve": {
+          //   border: "solid 2px #fb5607",
+          //   boxShadow: "0px 2px 0px #fb5607"
+          // }
+        }), 
+        option: provided => ({
+          ...provided,
+          color: '#fefefe',
+          backgroundColor: '#374151'
+        }),
+        singleValue: provided => ({
+          ...provided,
+          color: '#fefefe',
+          backgroundColor: '#374151'
+        }),
+        input: (base, state) => ({
+          ...base,
+          color: '#fefefe'
         })
       }}
     />

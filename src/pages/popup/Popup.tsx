@@ -29,10 +29,10 @@ export default function Popup(): JSX.Element {
   return (
     <div className="absolute top-0 left-0 right-0 bottom-0 text-center h-full p-3 bg-theme-grey">
       <header className="flex flex-col items-center justify-center text-white">
-        <div className="flex flex-wrap w-full justify-center items-start space-y-4 mt-10">
+        <div className="flex flex-wrap w-full justify-center items-start space-y-4 mt-1">
           <div className="fixed w-full h-full top-1/2 transform -translate-y-1/2 overflow-hidden space-y-6 pb-7">
             <Banner {...{ title: 'Recurso' }} />
-            <div className="mx-auto p-4 bg-theme-grey space-y-6 pb-7">
+            <div className="mx-auto p-0 bg-theme-grey space-y-4 pb-7">
               {!user ? <LogInSignUp {...{ setUser }}/> : <AddResourceForm {...{ user }}/>}
             </div>
           </div>

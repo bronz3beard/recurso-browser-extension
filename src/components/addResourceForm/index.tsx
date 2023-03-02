@@ -27,7 +27,7 @@ type AddResourceFormProps = {
 }
 
 const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps) => {
-  const [formSection, setFormSection] = useState<FormSection>(FormSection.TOPIC)
+  const [formSection, setFormSection] = useState<FormSection>(FormSection.RESOURCE)
   const [topic, setTopic] = useState<Topic | undefined>(undefined)
   const [topicName, setTopicName] = useState<SingleValue<OptionType>>()
   const [isNewTopic, setIsNewTopic] = useState<boolean>(false)
@@ -48,7 +48,45 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
         return
       } else {
         try {
-          if (formSection === FormSection.TOPIC) {
+          // if (formSection === FormSection.TOPIC) {
+          //   if (isNewTopic) {
+          //     assertIsTrue(!!user, 'We need a User to add a new topic')
+
+          //     const { data, error } = await supabase
+          //       .from('topic')
+          //       .insert({ topic_name: topicName?.label, user_id: user.id })
+
+          //     if (error) {
+          //       console.error(
+          //         '🚀 ~ file: index.tsx ~ line 70 ~ onSubmit ~ error',
+          //         error,
+          //       )
+          //       throw error
+          //     }
+
+          //     assertIsTrue(
+          //       !!data,
+          //       'Response for Topic insert is empty array',
+          //     )
+
+          //     setTopic(data[0])
+          //   } else {
+          //     if (user && topicName) {
+          //       setTopic({
+          //         id: topicName.value,
+          //         user_id: user.id,
+          //         topic_name: topicName.label,
+          //       })
+          //     }
+          //   }
+          //   setFormSection(FormSection.RESOURCE)
+
+          // } else {
+            assertIsTrue(user !== null, 'We need a user to add a new resource')
+            assertIsTrue(
+              !!user?.email,
+              'We need a user email to add a new resource',
+            )
             if (isNewTopic) {
               assertIsTrue(!!user, 'We need a User to add a new topic')
 
@@ -79,14 +117,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
                 })
               }
             }
-            setFormSection(FormSection.RESOURCE)
 
-          } else {
-            assertIsTrue(user !== null, 'We need a user to add a new resource')
-            assertIsTrue(
-              !!user?.email,
-              'We need a user email to add a new resource',
-            )
             assertIsTrue(
               topic !== undefined,
               'We need a topic to add a new resource',
@@ -101,7 +132,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
             }
 
             await addNewResource(payload)
-          }
+          // }
         } catch (error: any) {
           console.error(
             '🚀 ~ file: index.tsx ~ line 64 ~ onSubmit ~ error',
@@ -145,11 +176,11 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
         setFormData({
           ...formData,
           linkUrl: {
-            ...formData.linkUrl,
+            ...linkUrl,
             value: tabs[0].url ?? '',
           },
           description: {
-            ...formData.description,
+            ...description,
             value: tabs[0].title ?? ''
           }
         })
@@ -204,7 +235,6 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
 
   return (
     <>
-      {formSection === FormSection.TOPIC && (
         <div className="relative max-w-sm mx-auto">
           <label
             htmlFor="topic"
@@ -215,6 +245,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
           <AsyncReactSelect
             {...{
               user,
+              tabIndex: 1,
               filterValue: topicName,
               selectType: SelectType.TOPIC, 
               handleAsyncSelectChange: handleTopicAsyncSelectChange,
@@ -222,52 +253,49 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
             }}
           />
         </div>
-      )}
-      {formSection === FormSection.RESOURCE && (
-        <>
-          <div className="relative max-w-sm mx-auto">
-            <Input
-              required
-              autoFocus
-              type="url"
-              id="linkUrl"
-              placeholder=""
-              name="linkUrl"
-              pattern="https://*"
-              inputMode="text"
-              value={linkUrl.value}
-              onChange={handleChange}
-              className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
-            />
-            <label
-              htmlFor="linkUrl"
-              className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
-            >
-              {linkUrl.label}*
-            </label>
-          </div>
-          <div className="relative max-w-sm mx-auto">
-            <Input
-              autoFocus
-              type="text"
-              placeholder=""
-              id="description"
-              name="description"
-              inputMode="text"
-              onChange={handleChange}
-              value={description.value}
-              className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
-            />
-            <label
-              htmlFor="description"
-              className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
-            >
-              {description.label}
-            </label>
-          </div>
-        </>
-      )}
-      <div className="flex flex-wrap max-w-sm m-auto items-center justify-around py-4">
+        <div className="relative max-w-sm mx-auto">
+          <Input
+            required
+            type="url"
+            tabIndex={2}
+            id="linkUrl"
+            placeholder=""
+            name="linkUrl"
+            autoFocus={false}
+            pattern="https://*"
+            inputMode="text"
+            value={linkUrl.value}
+            onChange={handleChange}
+            className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
+          />
+          <label
+            htmlFor="linkUrl"
+            className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
+          >
+            {linkUrl.label}*
+          </label>
+        </div>
+        <div className="relative max-w-sm mx-auto">
+          <Input
+            type="text"
+            tabIndex={3}
+            placeholder=""
+            inputMode="text"
+            id="description"
+            name="description"
+            autoFocus={false}
+            onChange={handleChange}
+            value={description.value}
+            className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
+          />
+          <label
+            htmlFor="description"
+            className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
+          >
+            {description.label}
+          </label>
+        </div>
+      <div className="flex flex-wrap max-w-sm m-auto items-center justify-around py-1">
         {formSection === FormSection.TOPIC ? (
           <PrimaryButton
             type="submit"
