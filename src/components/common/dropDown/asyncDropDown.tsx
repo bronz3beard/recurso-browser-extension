@@ -14,6 +14,7 @@ import {
 import { assertIsTrue } from '../../../utils/valueCheckers'
 import { OptionType } from '.'
 import { User } from '@supabase/supabase-js'
+import { reactSelectStyles } from './helper'
 
 export enum SelectType {
   TOPIC,
@@ -164,6 +165,7 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
       name="async-select"
       className={className}
       onChange={handleChange}
+      loadingMessage={() => 'Checking existing topics...'}
       getOptionLabel={getLabelOption}
       getOptionValue={getValueOption}
       onInputChange={handleInputChange}
@@ -173,42 +175,7 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
         LoadingIndicator: () => null,
       }}
       placeholder={placeHolder?.label}
-      styles={{
-        control: (provided, state) => ({
-          ...provided,
-          color: '#fefefe',
-          borderRadius: 0,
-          padding: '0.5rem',
-          boxShadow: "none",
-          border: 'none',
-          borderBottom: state.isFocused ? 'solid 2px #fb5607' : 'solid 2px #d1d5db',
-          borderTopLeftRadius: '10px',
-          borderTopRightRadius: '10px',
-          cursor: 'pointer',
-          backgroundColor: '#374151',
-          "&:hover": {
-            borderBottom: 'solid 2px #fb5607',
-          },
-          // "&:acitve": {
-          //   border: "solid 2px #fb5607",
-          //   boxShadow: "0px 2px 0px #fb5607"
-          // }
-        }), 
-        option: provided => ({
-          ...provided,
-          color: '#fefefe',
-          backgroundColor: '#374151'
-        }),
-        singleValue: provided => ({
-          ...provided,
-          color: '#fefefe',
-          backgroundColor: '#374151'
-        }),
-        input: (base, state) => ({
-          ...base,
-          color: '#fefefe'
-        })
-      }}
+      styles={{...reactSelectStyles()}}
     />
   )
 }

@@ -188,7 +188,20 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
     }
 
     getCurrentTab()
-  }, [])
+
+  }, [chrome.tabs.query({ currentWindow: true, active: true })])
+
+  // const handleKeyDown = (event: KeyboardEvent) => {
+  //   console.log("🚀 ~ file: index.tsx:195 ~ handleKeyDown ~ event:", event)
+  //   console.log('User pressed: ', event.key);
+
+  //   // console.log(message);
+
+  //   if (event.key === 'Backspace') {
+  //     // 👇️ your logic here
+  //     console.log('Backspace key pressed ✅');
+  //   }
+  // };
 
   const addNewResource = async (
     payload: Partial<Resource>,
@@ -236,12 +249,6 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
   return (
     <>
         <div className="relative max-w-sm mx-auto">
-          <label
-            htmlFor="topic"
-            className="z-0 duration-300 origin-0 text-white text-lg select-none"
-          >
-            Enter a topic*
-          </label>
           <AsyncReactSelect
             {...{
               user,
@@ -249,9 +256,15 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
               filterValue: topicName,
               selectType: SelectType.TOPIC, 
               handleAsyncSelectChange: handleTopicAsyncSelectChange,
-              className: "block w-full text-base text-black appearance-none focus:outline-none border-gray-300 rounded-md font-bold"
+              className: "text-base peer"
             }}
           />
+          <label
+            htmlFor="async-select"
+            className="absolute text-lg text-gray-200 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-primary-colour peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 select-none"
+          >
+            Enter a topic*
+          </label>
         </div>
         <div className="relative max-w-sm mx-auto">
           <Input
@@ -266,6 +279,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
             inputMode="text"
             value={linkUrl.value}
             onChange={handleChange}
+            // onkeydown={handleKeyDown}
             className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
           />
           <label
@@ -286,6 +300,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
             autoFocus={false}
             onChange={handleChange}
             value={description.value}
+            // onkeydown={handleKeyDown}
             className="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-base text-gray-200 bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-primary-colour peer"
           />
           <label
