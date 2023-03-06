@@ -24,7 +24,7 @@ type AddResourceFormProps = {
 }
 
 const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps) => {
-  const [counter, setCounter] = useState<number>(3)
+  const [counter, setCounter] = useState<number>(5)
   const [newRecordConfirmation, setNewRecordConfirmation] = useState<boolean>(false)
   const [topicName, setTopicName] = useState<SingleValue<OptionType>>()
   const [isNewTopic, setIsNewTopic] = useState<boolean>(false)
@@ -265,7 +265,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
           {validationErrors.linkUrl}
         </p>
         {newRecordConfirmation && Boolean(counter) && (
-          <p className="text-white text-lg text-center">
+          <p className="text-white text-xl2 text-center">
             New Record Added to your stash!
           </p>
         )}
