@@ -1,8 +1,8 @@
 {
   "name": "recurso-browser-extension",
-  "displayName": "Recurso Web Extension",
-  "version": "1.1.1",
-  "description": "A simple chrome extension for saving resources to recurso.tech, build with Vite, React, TypeScript and TailwindCSS.",
+  "displayName": "recurso.tech Web Extension",
+  "version": "1.1.2",
+  "description": "A simple chrome extension for saving resources to recurso.tech, built with Vite, React, TypeScript and TailwindCSS.",
   "license": "MIT",
   "private": false,
   "author": "bronz3beard (https://www.heyrory.com/)",
