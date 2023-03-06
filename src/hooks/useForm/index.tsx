@@ -1,103 +1,61 @@
 import { useState, MouseEvent, ChangeEvent } from 'react'
+import { isFunction } from '@src/utils/valueCheckers'
 
 export type InputValues = {
   value: string
+  values?: string[]
   label?: string
   toggleValue?: boolean
   placeholder?: string
   disabled?: boolean
   filterValue?: string
-}
-
-export type FormDataItem = {
-  [index: string]: InputValues
+  validation?: (value: string) => boolean
 }
 
 export type ErrorResponse = Record<string, string>
 
-export type FormSubmitValue = {
+export interface FormSubmitValues<T> {
   formType: string
-  formData: FormDataItem
-  error: ErrorResponse
+  formData: T
+  error: ErrorResponse | undefined
 }
 
-type DefaultOptions = {
-  initialValues: FormDataItem
-  onSubmit: (submitValues: FormSubmitValue) => void
-  onHandleCancel?: (submitValues: FormSubmitValue) => void
-  validate: (formData: FormDataItem) => ErrorResponse
+interface DefaultOptions<T> {
+  initialValues: T
+  onSubmit: (submitValues: FormSubmitValues<T>) => void
+  validate?: (formData: T) => ErrorResponse
 }
 
-const useForm = (options: DefaultOptions) => {
-  const { initialValues, onSubmit, onHandleCancel, validate } = options
-  const [formData, setFormData] = useState<FormDataItem>(initialValues)
-
-  // currently errors are not being used but they can be in future.
+const useForm = <T extends {[key: string]: {[key: string]: any}},>(options: DefaultOptions<T>) => {
+  const { initialValues, onSubmit, validate } = options
+  const [formData, setFormData] = useState<T>(initialValues)
   const [errors, setErrors] = useState<ErrorResponse>({})
 
-  // handleButtonChange && handleCheckboxChange or to better separate event types for handling button and input"checkbox" aka switch.
-  // component these events will also allow for form to grow in future if needed with extra form elements, buttons, checkboxes etc.
-  const handleButtonChange = (event: MouseEvent<HTMLButtonElement>) => {
-    const { currentTarget } = event
-    const { name } = currentTarget
-
-    setFormData({
-      ...formData,
-      [name]: {
-        ...formData[name],
-        toggleValue: !formData[name].toggleValue,
-      },
-    })
-  }
-
-  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { currentTarget } = event
-    const { name } = currentTarget
-
-    setFormData({
-      ...formData,
-      [name]: {
-        ...formData[name],
-        toggleValue: !formData[name].toggleValue,
-      },
-    })
-  }
-
-  // accommodate all possible form types.
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { currentTarget } = event
-    const { value, name } = currentTarget
-
-    setFormData({
-      ...formData,
-      [name]: {
-        ...formData[name],
-        value,
-      },
-    })
-  }
-
-  const handleCancel = (
-    event: MouseEvent<HTMLButtonElement> | MouseEvent<HTMLInputElement>,
-  ) => {
+  const handleFormReset = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    const { id } = event.currentTarget
-    const error = validate(formData)
+    setFormData(initialValues)
+  }
 
-    setErrors({
-      ...errors,
-      ...error,
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { currentTarget } = event
+    const { value, name: eventName } = currentTarget
+
+    type Name = keyof T;
+    const name: Name = eventName as unknown as Name
+    const formDataValue: InputValues = formData[name] as unknown as InputValues
+    const validation = formDataValue?.validation?.(value) as unknown as (value: string) => boolean
+
+    const validatedValue = validation?.(value) ? value : ''
+
+    setFormData({
+      ...formData,
+      [name]: {
+        ...formDataValue,
+        value: isFunction(validation) ? validatedValue : value,
+      },
     })
-
-    const submitValues: FormSubmitValue = {
-      formData,
-      error,
-      formType: id,
-    } as FormSubmitValue
-
-    if (onHandleCancel) {
-      onHandleCancel(submitValues)
-    }
   }
 
   const handleSubmit = (
@@ -105,34 +63,29 @@ const useForm = (options: DefaultOptions) => {
   ) => {
     event.preventDefault()
     const { id } = event.currentTarget
-    const error = validate(formData)
+    const error = !validate ? null : validate(formData)
 
     setErrors({
       ...errors,
       ...error,
     })
 
-    const submitValues: FormSubmitValue = {
+    const submitValues: FormSubmitValues<T> = {
       formData,
-      error,
+      error: error as unknown as ErrorResponse,
       formType: id,
-    } as FormSubmitValue
+    }
 
     onSubmit(submitValues)
   }
-  // the above three functions are passed to and used in the component where we use useForm,
-  // the functions called inside each function scope are what are passed to useForm from the component where we use useForm.
-  // this allows greater flexibility for form handler functions and also lets us preventDefault here rather than in parent component.
-  // the functions called inside each function scope are specific to each parent component and the actions that need to be taken per specific form.
+
   return {
     formData,
     errors,
     setFormData,
     handleChange,
     handleSubmit,
-    handleCancel,
-    handleCheckboxChange,
-    handleButtonChange,
+    handleFormReset
   }
 }
 

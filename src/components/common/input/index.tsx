@@ -60,14 +60,15 @@ type InputEventProps = {
   onMouseDown?: (event: MouseEvent<HTMLInputElement>) => void
   onMouseOut?: (event: MouseEvent<HTMLInputElement>) => void
   onMouseOver?: (event: MouseEvent<HTMLInputElement>) => void
-  onkeydown?: (event: KeyboardEvent) => void
+  handleKeyDown?: (event: KeyboardEvent) => void
 }
 
 type InputDefaultProps = InputProps & InputEventProps
 
 const Input: FC<InputDefaultProps> = (
-  { pciID, piiID, disabled, hasPCIPII, className, dataAttribute }: InputDefaultProps, rest
+  props: InputDefaultProps
 ) => {
+  const { pciID, piiID, disabled, hasPCIPII, className, dataAttribute } = props
   // personal credit information means absolutely no data.
   // personally identifiable information, this one is contextual/grey area.
   const privacyId = !pciID ? piiID : pciID
@@ -77,7 +78,7 @@ const Input: FC<InputDefaultProps> = (
       disabled={disabled}
       className={className}
       data-attribute={`${dataAttribute}${hasPCIPII ? ` ${privacyId}` : ''}`}
-      {...rest}
+      {...props}
     />
   )
 }
@@ -127,7 +128,7 @@ Input.defaultProps = {
   onMouseOver: () => {
     return
   },
-  onkeydown: () => {
+  handleKeyDown: () => {
     return
   },
   autoComplete: 'off',

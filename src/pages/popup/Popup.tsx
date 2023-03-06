@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import LogInSignUp from '@src/components/logInSignUp';
-import AddResourceForm from '@src/components/addResourceForm';
 import { User } from '@supabase/supabase-js';
 import { supabase, SupaBaseUser } from '@src/lib/supabaseClient';
 import Banner from '@src/components/common/banner';
+import AddResourceForm from '@src/forms/addResourceForm';
+import LogInSignUpForm from '@src/forms/logInSignUpForm';
 
 export default function Popup(): JSX.Element {
   const [user, setUser] = useState<User | undefined>()
@@ -33,7 +33,11 @@ export default function Popup(): JSX.Element {
           <div className="fixed w-full h-full top-1/2 transform -translate-y-1/2 overflow-hidden space-y-6 pb-7">
             <Banner {...{ title: 'Recurso' }} />
             <div className="mx-auto p-0 bg-theme-grey space-y-4 pb-7">
-              {!user ? <LogInSignUp {...{ setUser }}/> : <AddResourceForm {...{ user }}/>}
+              {!user ? (
+                <LogInSignUpForm {...{ setUser }}/>
+              ) : (
+                <AddResourceForm {...{ user }}/>
+              )}
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, Ref, useEffect, useState } from 'react'
 import AsyncCreatableSelect from 'react-select/async-creatable'
 import {
   OptionsOrGroups,
@@ -14,7 +14,8 @@ import {
 import { assertIsTrue } from '../../../utils/valueCheckers'
 import { OptionType } from '.'
 import { User } from '@supabase/supabase-js'
-import { reactSelectStyles } from './helper'
+import { reactSelectStyles } from './helpers'
+import Select from 'react-select/dist/declarations/src/Select'
 
 export enum SelectType {
   TOPIC,
@@ -22,6 +23,7 @@ export enum SelectType {
 }
 
 type AsyncReactSelectProps = {
+  selectInputRef?: Ref<Select<OptionType, false, GroupBase<OptionType>>>
   tabIndex: number
   user: User | undefined
   selectType: SelectType
@@ -38,6 +40,7 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
     tabIndex,
     filterValue,
     selectType, 
+    selectInputRef,
     handleAsyncSelectChange,
     className = 'block w-full text-lg text-white appearance-none focus:outline-none',
   }: AsyncReactSelectProps,
@@ -59,7 +62,7 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
         setPlaceHolder({
           value: 0,
           label: !filterValue?.label
-            ? 'Search Topic'
+            ? 'Search Topics'
             : filterValue.label,
         })
       }
@@ -157,6 +160,7 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
 
   return (
     <AsyncCreatableSelect<OptionType>
+      ref={selectInputRef}
       tabIndex={tabIndex}
       autoFocus
       cacheOptions
