@@ -23,7 +23,8 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "zipit": "cd dist/ && zip -r dist.zip *"
   },
   "type": "module",
   "dependencies": {
