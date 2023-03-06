@@ -33,7 +33,7 @@ export default function Popup(): JSX.Element {
           <div className="fixed w-full h-full top-1/2 transform -translate-y-1/2 overflow-hidden space-y-6 pb-7">
             <Banner {...{ title: 'Recurso' }} />
             <div className="mx-auto p-0 bg-theme-grey space-y-4 pb-7">
-              {!user ? (
+              {user ? (
                 <LogInSignUpForm {...{ setUser }}/>
               ) : (
                 <AddResourceForm {...{ user }}/>

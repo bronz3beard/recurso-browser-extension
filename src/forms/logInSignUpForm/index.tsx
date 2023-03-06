@@ -5,9 +5,7 @@ import React, {
   SetStateAction,
 } from 'react'
 import {
-  AuthResponse,
   SignInWithPasswordCredentials,
-  SignUpWithPasswordCredentials,
   User,
 } from '@supabase/supabase-js'
 import { supabase } from '@src/lib/supabaseClient'
@@ -39,16 +37,6 @@ const LogInSignUpForm:FC<LogInSignUpProps> = ({ setUser }: LogInSignUpProps) => 
     initialValues: authInput(),
     async onSubmit({ formData, error, formType }: FormSubmitValues<LogInSignUpFormInputValues>) {
       const { email, password } = formData
-      if (formType === 'signUp') {
-        // setNotifyToast({
-        //   seconds: 10,
-        //   showNotification: true,
-        //   title: 'Please confirm your address.',
-        //   position: LocationPosition.right,
-        //   emojiPosition: EmojiPosition.left,
-        //   message: `Check your email or (junk)email`,
-        // })
-      }
 
       if (error && objectHasAttributes(error)) {
         return
@@ -61,11 +49,9 @@ const LogInSignUpForm:FC<LogInSignUpProps> = ({ setUser }: LogInSignUpProps) => 
             password: password.value as string,
           }
 
-          const supabaseAuthType = async (): Promise<AuthResponse> => formType === 'signIn'
-            ? supabase.auth.signInWithPassword(authFields as unknown as SignInWithPasswordCredentials)
-            : supabase.auth.signUp(authFields as unknown as SignUpWithPasswordCredentials)
-
-          const { data, error } = await supabaseAuthType()
+          const { data, error } = await supabase.auth.signInWithPassword(
+            authFields as unknown as SignInWithPasswordCredentials
+          )
           setUser(!data.user ? undefined : data.user)
 
           if (error) {
@@ -98,17 +84,7 @@ const LogInSignUpForm:FC<LogInSignUpProps> = ({ setUser }: LogInSignUpProps) => 
     },
   })
 
-  // const { email, password } = inputData
   const validationErrors: FormErrorTemplate = errors as FormErrorTemplate
-
-  // const handleSignUp = (event: MouseEvent<HTMLButtonElement>) => {
-  //   handleSubmit(event)
-  // }
-
-  // const handleSignIn = (event: MouseEvent<HTMLButtonElement>) => {
-  //   handleSubmit(event)
-  // }
-
 
   return (
     <>
@@ -153,22 +129,11 @@ const LogInSignUpForm:FC<LogInSignUpProps> = ({ setUser }: LogInSignUpProps) => 
         >
           Password<span className="text-primary-colour ml-0.5">*</span>
         </label>
+        <p className="text-white text-lg text-center">
+          To create an account, click the Recurso logo
+        </p>
       </div>
-      <div className="flex flex-wrap max-w-sm m-auto items-center justify-around pt-4">
-        <PrimaryButton
-          {...{
-            type: "submit",
-            width: "w-36",
-            height: "h-16",
-            id: "signUp",
-            text: "Create Account",
-            buttonPadding: "p-1",
-            textColour: "text-white",
-            onClick: handleSubmit,
-            buttonClass: "flex flex-row items-center text-white font-medium rounded-lg",
-            backgroundColor: "bg-secondary-colour hover:bg-secondary-contrast-colour active:bg-secondary-contrast-colour"
-          }}
-        />
+      <div className="flex flex-wrap max-w-sm m-auto items-center justify-end">
         <PrimaryButton
           {...{
             type: "submit",
