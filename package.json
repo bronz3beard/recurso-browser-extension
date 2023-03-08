@@ -1,7 +1,7 @@
 {
   "name": "recurso-browser-extension",
   "displayName": "recurso.tech Web Extension",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "A simple chrome extension for saving resources to recurso.tech.",
   "license": "MIT",
   "private": false,

@@ -30,7 +30,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
   const [isNewTopic, setIsNewTopic] = useState<boolean>(false)
 
   const selectInputRef =
-  useRef<Select<OptionType, false, GroupBase<OptionType>>>(null)
+    useRef<Select<OptionType, false, GroupBase<OptionType>>>(null)
 
   const {
     errors,
@@ -241,7 +241,7 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
           {description.label}
         </label>
       </div>
-    <div className="flex flex-wrap max-w-sm m-auto items-center justify-end pt-4">
+      <div className="flex flex-wrap max-w-sm m-auto items-center justify-end pt-4">
         <PrimaryButton
           {...{
             type: "submit",
