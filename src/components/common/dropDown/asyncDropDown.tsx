@@ -89,7 +89,7 @@ const AsyncReactSelect: FC<AsyncReactSelectProps> = ({
       const { data: topic, error } = await supabase
         .from('topic')
         .select('topic_name, id')
-        .like('topic_name', `%${searchValue}%`)
+        .ilike('topic_name', `%${searchValue}%`)
 
       if (error) {
         setError(error)

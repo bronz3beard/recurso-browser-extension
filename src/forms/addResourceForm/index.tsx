@@ -10,7 +10,7 @@ import useForm from '@src/hooks/useForm'
 import AsyncReactSelect, { SelectType } from '@src/components/common/dropDown/asyncDropDown'
 import Input from '@src/components/common/input'
 import { PrimaryButton } from '@src/components/common/button'
-import { ResourceFormInputValues, resourceInput } from './helpers'
+import { getMetaData, ResourceFormInputValues, resourceInput } from './helpers'
 import Select from 'react-select/dist/declarations/src/Select'
 
 type FormErrorTemplate = {
@@ -89,7 +89,9 @@ const AddResourceForm:FC<AddResourceFormProps> = ({ user }: AddResourceFormProps
             email: user.email,
           }
 
-          const { data, error } = await supabase.from('resource').insert({ ...payload }).select()
+          const newPayload = await getMetaData(payload)
+
+          const { data, error } = await supabase.from('resource').insert({ ...newPayload }).select('id')
 
           assertIsTrue(!error)
 
