@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "recurso.tech Web Extension",
-  "version": "1.2.0",
-  "description": "A simple chrome extension for saving resources to recurso.tech.",
+  "name": "recurso.tech (WE)",
+  "version": "1.2.1",
+  "description": "A simple chrome extension for saving your online resources to recurso.tech.",
   "permissions": [
     "tabs"
   ],
